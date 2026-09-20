@@ -53,9 +53,9 @@ In Vercel → **Settings → Environment Variables**, add:
 
 | Variable | Value | Environments |
 |----------|-------|--------------|
-| `DATABASE_URL` | Your Neon connection string (see below) | Production Preview Development |
-| `NEXTAUTH_SECRET` | Run `openssl rand -base64 32` | Production Preview Development |
-| `NEXTAUTH_URL` | `https://YOUR-APP.vercel.app` | Production only (after first deploy) |
+| `DATABASE_URL` | Your Neon connection string (see below) | ✅ Production ✅ Preview ✅ Development |
+| `NEXTAUTH_SECRET` | Run `openssl rand -base64 32` | ✅ Production ✅ Preview ✅ Development |
+| `NEXTAUTH_URL` | `https://YOUR-APP.vercel.app` | ✅ Production only (after first deploy) |
 
 ### DATABASE_URL — copy exactly like this (no extra quotes):
 
@@ -64,7 +64,7 @@ postgresql://neondb_owner:YOUR_PASSWORD@ep-xxx.us-east-2.aws.neon.tech/neondb?ss
 ```
 
 **Important:**
-- Paste the URL without wrapping it in `"` quotes in Vercel
+- Paste the URL **without** wrapping it in `"` quotes in Vercel
 - Must start with `postgresql://` — NOT `file:./dev.db` (SQLite won't work)
 - Check all 3 environments (Production, Preview, Development) are ticked
 - After adding variables, you must **Redeploy** (env vars don't apply to past builds)

@@ -1,0 +1,44 @@
+{
+  "name": "preppy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/ensure-env.mjs && next dev",
+    "build": "prisma generate && next build",
+    "vercel-build": "node scripts/vercel-build.mjs",
+    "start": "next start",
+    "lint": "next lint",
+    "db:push": "node scripts/ensure-env.mjs && prisma migrate deploy",
+    "db:seed": "node scripts/ensure-env.mjs && tsx prisma/seed.ts",
+    "db:studio": "node scripts/ensure-env.mjs && prisma studio",
+    "setup": "node scripts/setup.mjs",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.5.0",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.484.0",
+    "next": "^15.2.4",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.0.17",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.13.14",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "eslint": "^9.23.0",
+    "eslint-config-next": "^15.2.4",
+    "prisma": "^6.5.0",
+    "tailwindcss": "^4.0.17",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
