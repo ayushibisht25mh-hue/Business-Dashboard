@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  SALON_OWNER
+  ADMIN
+}
+
+enum SalonStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  phone         String?
+  password      String
+  role          Role       @default(CUSTOMER)
+  image         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  salon         Salon?
+  bookings      Booking[]
+  reviews       Review[]
+  favorites     Favorite[]
+}
+
+model Salon {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  description String?
+  address     String
+  city        String
+  latitude    Float        @default(28.6139)
+  longitude   Float        @default(77.2090)
+  phone       String
+  email       String?
+  coverImage  String?
+  images      String       @default("[]")
+  openTime    String       @default("09:00")
+  closeTime   String       @default("20:00")
+  status      SalonStatus  @default(PENDING)
+  rating      Float        @default(0)
+  reviewCount Int          @default(0)
+  ownerId     String       @unique
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  services    Service[]
+  staff       Staff[]
+  bookings    Booking[]
+  reviews     Review[]
+  favorites   Favorite[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  duration    Int
+  category    String    @default("General")
+  salonId     String
+  salon       Salon     @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+  createdAt   DateTime  @default(now())
+}
+
+model Staff {
+  id        String    @id @default(cuid())
+  name      String
+  role      String    @default("Stylist")
+  image     String?
+  salonId   String
+  salon     Salon     @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  date      DateTime
+  startTime String
+  endTime   String
+  status    BookingStatus @default(PENDING)
+  notes     String?
+  totalPrice Float
+  customerId String
+  customer   User         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  salonId    String
+  salon      Salon        @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  serviceId  String
+  service    Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  staffId    String?
+  staff      Staff?       @relation(fields: [staffId], references: [id], onDelete: SetNull)
+  review     Review?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?
+  photos    String   @default("[]")
+  response  String?
+  customerId String
+  customer   User    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  salonId    String
+  salon      Salon   @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  bookingId  String?  @unique
+  booking    Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now())
+}
+
+model Favorite {
+  id         String   @id @default(cuid())
+  customerId String
+  customer   User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  salonId    String
+  salon      Salon    @relation(fields: [salonId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([customerId, salonId])
+}
